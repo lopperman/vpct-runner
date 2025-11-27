@@ -8,6 +8,14 @@ A benchmarking framework for evaluating vision-language models on the **Visual P
 
 The Visual Physics Comprehension Test presents models with images from a ball-and-bucket physics simulation. Given an initial frame showing a ball, obstacles, and three buckets, models must predict which bucket the ball will eventually fall into. This tests spatial reasoning, trajectory prediction, and understanding of physical dynamics like gravity, collisions, and bouncing.
 
+## Requirements
+
+- **Python 3.10+** (uses `dataclass(slots=True)`)
+- API keys for the model providers you want to test:
+  - OpenAI: `OPENAI_API_KEY`
+  - Anthropic: `ANTHROPIC_API_KEY`
+  - Google Gemini: `GEMINI_API_KEY` (via OpenAI-compatible endpoint)
+
 ## Quick Start
 
 ### 1. Install Dependencies
@@ -41,8 +49,17 @@ python run-vpct.py -d ./data -o ./results -m gpt-4o --runs 3
 ## Usage
 
 ```
-python run-vpct.py [OPTIONS]
+usage: run-vpct.py [-h] [-d DATA_DIR] [-o OUTPUT_DIR] [-p PROMPT_FILE] [-m MODELS]
+                   [--runs RUNS] [--batch-size BATCH_SIZE] [--subset SUBSET]
+                   [--max-retries MAX_RETRIES] [--base-delay BASE_DELAY] [--overwrite]
+                   [--max-tokens MAX_TOKENS] [--timeout-seconds TIMEOUT_SECONDS]
+                   [--thinking-budget THINKING_BUDGET] [--openai-base-url OPENAI_BASE_URL]
+                   [--openai-api-key OPENAI_API_KEY]
+
+Run image-based bucket-prediction benchmarks across OpenAI-compatible and Anthropic endpoints.
 ```
+
+Check `model_registry.py` to see the full list of configured model slugs.
 
 ### Core Options
 
@@ -54,7 +71,7 @@ python run-vpct.py [OPTIONS]
 | `-p, --prompt-file` | Custom prompt file (optional) | Built-in prompt |
 | `--runs` | Number of evaluation runs | `1` |
 | `--batch-size` | Concurrent requests per batch | `1` |
-| `--subset` | Limit to first N simulations | All |
+| `--subset` | Run a smaller subset of the benchmark (first N simulations) | All |
 
 ### Request Configuration
 
@@ -70,9 +87,9 @@ python run-vpct.py [OPTIONS]
 
 | Option | Description |
 |--------|-------------|
-| `--thinking-budget` | Anthropic extended thinking tokens (0 = disabled) |
-| `--openai-base-url` | Custom endpoint for OpenAI-compatible APIs |
-| `--openai-api-key` | API key (overrides `OPENAI_API_KEY` env var) |
+| `--thinking-budget` | Anthropic extended thinking tokens (ignored by OpenAI, 0 = disabled) |
+| `--openai-base-url` | Override base URL for OpenAI-compatible endpoints (e.g., `https://openrouter.ai/api/v1`) |
+| `--openai-api-key` | API key for custom endpoint; falls back to `OPENAI_API_KEY` env var if omitted |
 
 ## Supported Models
 
