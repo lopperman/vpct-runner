@@ -21,7 +21,7 @@ The Visual Physics Comprehension Test presents models with images from a ball-an
 ### 1. Install Dependencies
 
 ```bash
-pip install openai anthropic httpx
+pip install -r requirements.txt
 ```
 
 ### 2. Download the Dataset
