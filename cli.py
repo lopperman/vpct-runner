@@ -5,7 +5,10 @@ from pathlib import Path
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(
         prog="run-vpct.py",
-        description="Run image-based bucket-prediction benchmarks across OpenAI-compatible and Anthropic endpoints.",
+        description=(
+            "Run image-based bucket-prediction benchmarks across OpenAI-compatible and"
+            " Anthropic endpoints."
+        ),
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
 

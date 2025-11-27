@@ -1,5 +1,7 @@
-import re, sys, asyncio
-from typing import Optional, Callable, Coroutine
+import asyncio
+import re
+import sys
+from typing import Callable, Coroutine, Optional
 
 import httpx
 
@@ -35,5 +37,5 @@ async def robust_request(
             else:
                 print(msg + f", retrying in {delay:.1f}s …", file=sys.stderr)
                 await asyncio.sleep(delay)
-    
+
     raise RuntimeError(f"{label}: exceeded retries")

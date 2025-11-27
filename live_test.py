@@ -8,7 +8,13 @@ Edit the MODELS list or COMMON_OPTS string as needed.
 """
 
 from __future__ import annotations
-import argparse, datetime, os, shlex, subprocess, sys
+
+import argparse
+import datetime
+import os
+import shlex
+import subprocess
+import sys
 from typing import List
 
 from model_registry import MODEL_REGISTRY

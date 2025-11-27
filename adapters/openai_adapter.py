@@ -4,6 +4,7 @@ from typing import Callable, Coroutine, Optional
 
 import openai
 
+
 def make_openai_adapter(
     model: str,
     *,
@@ -26,8 +27,12 @@ def make_openai_adapter(
     async def _call(image_path: Path, prompt: str) -> str:
         img_b64 = base64.b64encode(image_path.read_bytes()).decode()
         messages = [
-            {"role": "system",
-             "content": "You are an expert physics simulator that predicts bucket outcomes."},
+            {
+                "role": "system",
+                "content": (
+                    "You are an expert physics simulator that predicts bucket outcomes."
+                ),
+            },
             {"role": "user",
              "content": [
                  {"type": "text", "text": prompt},

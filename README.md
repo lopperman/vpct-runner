@@ -35,9 +35,15 @@ huggingface-cli download camelCase12/vpct-1 --repo-type dataset --local-dir ./da
 
 ### 3. Set API Keys
 
+Set your API keys as environment variables. You can do this by exporting them in your shell:
 ```bash
 export OPENAI_API_KEY="your-openai-key"
 export ANTHROPIC_API_KEY="your-anthropic-key"
+```
+Alternatively, you can create a `.env` file in the root of the project:
+```
+OPENAI_API_KEY="your-openai-key"
+ANTHROPIC_API_KEY="your-anthropic-key"
 ```
 
 ### 4. Run a Benchmark
@@ -59,7 +65,7 @@ usage: run-vpct.py [-h] [-d DATA_DIR] [-o OUTPUT_DIR] [-p PROMPT_FILE] [-m MODEL
 Run image-based bucket-prediction benchmarks across OpenAI-compatible and Anthropic endpoints.
 ```
 
-Check `model_registry.py` to see the full list of configured model slugs.
+Check `models.json` to see the full list of configured model slugs.
 
 ### Core Options
 
@@ -206,14 +212,16 @@ Results are saved as JSON files in the output directory:
 
 ## Adding Custom Models
 
-Edit `model_registry.py` to add new models:
+Edit `models.json` to add new models. For example:
 
-```python
-MODEL_REGISTRY["my-model"] = {
-    "provider": "openai",  # or "anthropic"
+```json
+{
+  "my-model": {
+    "provider": "openai",
     "model": "actual-model-id",
-    "reasoning_effort": "medium",  # optional, for reasoning models
-    "thinking_budget": 16000,      # optional, for Anthropic
+    "reasoning_effort": "medium",
+    "thinking_budget": 16000
+  }
 }
 ```
 
@@ -223,10 +231,12 @@ MODEL_REGISTRY["my-model"] = {
 vpct-runner/
 ├── run-vpct.py          # Main entry point
 ├── cli.py               # Argument parsing
-├── model_registry.py    # Model configuration
+├── models.json          # Model configuration
+├── model_registry.py    # Loads models.json
 ├── prompt.py            # Default evaluation prompt
 ├── utils.py             # Retry logic and response parsing
 ├── vpct_dataclasses.py  # Result data structures
+├── pyproject.toml       # Linter configuration
 └── adapters/
     ├── openai_adapter.py    # OpenAI/compatible API integration
     └── claude_adapter.py    # Anthropic API integration

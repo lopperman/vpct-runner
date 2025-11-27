@@ -1,20 +1,24 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
-import asyncio, json, os, sys
+import asyncio
+import json
+import os
+import sys
 from dataclasses import asdict
 from pathlib import Path
 from statistics import mean
 from typing import Callable, Coroutine, Dict, List, Optional
 
+from adapters.claude_adapter import make_claude_adapter
+from adapters.openai_adapter import make_openai_adapter
 from cli import parse_args
+from model_registry import MODEL_REGISTRY
+from dotenv import load_dotenv
 from prompt import load_prompt
 from utils import extract_bucket, robust_request
 from vpct_dataclasses import BenchmarkResult, PredictionResult
-from model_registry import MODEL_REGISTRY
 
-from adapters.openai_adapter  import make_openai_adapter
-from adapters.claude_adapter  import make_claude_adapter
 
 async def bench_model(
     slug: str,
@@ -78,8 +82,11 @@ async def bench_model(
             bench.predictions.extend(r for r in batch_res if r)
 
         tmp = run_file.with_suffix(".tmp")
-        tmp.write_text(json.dumps({**asdict(bench),
-                                   "overall_accuracy": bench.overall_accuracy}, indent=2))
+        tmp.write_text(
+            json.dumps(
+                {**asdict(bench), "overall_accuracy": bench.overall_accuracy}, indent=2
+            )
+        )
         tmp.replace(run_file)
         print(f"✔︎  {run_file.name}  acc={bench.overall_accuracy:.2%}")
         run_accs.append(bench.overall_accuracy)
@@ -94,6 +101,7 @@ async def bench_model(
     print(f"★  {slug} avg acc = {mean(run_accs):.2%}")
 
 async def main() -> None:
+    load_dotenv()
     args = parse_args()
     prompt = load_prompt(args.prompt_file)
 
